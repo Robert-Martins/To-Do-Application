@@ -36,4 +36,9 @@ para evolução dos jobs por parte dos usuários.
 
 Foi também criada uma entidade base com atributos comuns
 para grande parte das classes, no intuito de evitar redundâncias
-através de herança.
+através de herança. A classe se denomina BaseEntity,
+classe abstrata por não necessitar de instância.
+
+Ainda, existe uma interface que produz relatórios do usuário,
+de workspaces e jobs. A interface foi utilizada para abstrair
+a implementação.
