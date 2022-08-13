@@ -4,7 +4,18 @@
 
 # Sistema de To-Do
 
-Foi desenvolvido um sistema de To-Do.
+O sistema foi desenvolvido utilizando Java em sua versão 17.
+
+Habilidades desenvolvidas durante implementação da aplicação:
+
+- Herança, abstração e polimorfismo
+- Manipulação de estruturas de dados
+- Save e consumo de dados em arquivos
+- Interface de interação com usuário (JOptionPane)
+- Lógica de programação
+
+O usuário da aplicação possui uma classe que o define,
+apenas para resgate inicial dos dados salvos no arquivo.
 
 O usuário final possuirá workspaces no qual poderá definir
 o escopo de cada um e os jobs a serem cadastrados.
