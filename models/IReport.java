@@ -1,13 +1,16 @@
 package models;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IReport {
 
-    String userReport(List<Workspace> workspaces);
+    void userReport(List<Workspace> workspaces);
 
-    String workspaceReport(Workspace workspace);
+    void workspaceReport(Workspace workspace, Date initialDate, Date finalDate);
 
-    String jobReport(Job job);
+    void workspaceReport(Workspace workspace);
+
+    void jobReport(Job job);
 
 }
