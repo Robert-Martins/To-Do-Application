@@ -12,4 +12,11 @@ public class Workspace extends BaseEntity{
         super(uuid, name, description, updatedAt, createdAt);
     }
 
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
+    }
 }
