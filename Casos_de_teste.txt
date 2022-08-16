@@ -1,0 +1,28 @@
+Ao longo do desenvolvimento da aplicação, serão realizados alguns testes para manter e conferir o nível de desempenho esperado do projeto, esses testes são:
+
+-Testes unitários, para verificar se as classes e seus métodos estão retornando o que se espera.
+- Testes de sistema, em busca de verificar se a lógica utilizada está sem falhas, garantindo o bom funcionamento da aplicação, gerando entradas e conferindo as saídas geradas, inserção, consultas e exclusão.
+- Testes de aceitação para verificar o uso e manuseio da aplicação, confirmando se ela cumpre o propósito ao qual ela foi desenvolvida para o usuário final.
+
+Exemplos de testes unitários que serão utilizados:
+usando a classe: Assert e JUnit
+
+Teste construtor classe Comment.
+Para verificar se os atributos foram inseridos corretamente no objeto:
+public void testConstrutorComment() {};
+
+Teste construtor classe Workspace
+Para verificar se os atributos foram inseridos corretamente no objeto:
+public void testConstrutorComment() {};
+
+Teste construtor classe Job
+Para verificar se os atributos foram inseridos corretamente no objeto:
+public void testConstrutorComment() {};
+
+Teste construtor classe User.
+Para verificar se a lista de workspace foi inserido corretamente:
+public void testConstrutorUser(){};
+
+Testar o método clearAttributes da classe Report.
+Para verificar se o método está retornando o resultado esperado.
+public void testclearAttributes(){};
