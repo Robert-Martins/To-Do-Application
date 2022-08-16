@@ -15,8 +15,8 @@ public abstract class BaseEntity {
 
     private Date createdAt;
 
-    public BaseEntity(UUID uuid, String name, String description, Date updatedAt, Date createdAt) {
-        this.uuid = uuid;
+    public BaseEntity(String name, String description, Date updatedAt, Date createdAt) {
+        this.uuid = UUID.randomUUID();
         this.name = name;
         this.description = description;
         this.updatedAt = updatedAt;

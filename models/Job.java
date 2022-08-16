@@ -16,8 +16,8 @@ public class Job extends BaseEntity {
 
     private Date dateDone;
 
-    public Job(UUID uuid, String name, String description, JobStatus status, Date dueDate, Date updatedAt, Date createdAt){
-        super(uuid, name, description, updatedAt, createdAt);
+    public Job(String name, String description, JobStatus status, Date dueDate, Date updatedAt, Date createdAt){
+        super(name, description, updatedAt, createdAt);
         this.setStatus(JobStatus.TO_DO);
         this.setDueDate(dueDate);
     }
