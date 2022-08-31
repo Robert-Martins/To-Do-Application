@@ -1,8 +1,10 @@
 package controllers;
 
+import models.Job;
 import models.Workspace;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class WorkspaceController {
@@ -26,6 +28,10 @@ public class WorkspaceController {
                 .filter(workspace -> workspace.getUuid() == uuid)
                 .findAny()
                 .orElseThrow();
+    }
+
+    public List<Job> getWorkspaceJobs(UUID uuid){
+        return this.getWorkspace(uuid).getJobs();
     }
 
     public void updateWorkspace(UUID uuid, String name, String description){
