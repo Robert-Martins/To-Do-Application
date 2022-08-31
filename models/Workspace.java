@@ -8,8 +8,8 @@ public class Workspace extends BaseEntity{
 
     private List<Job> jobs;
 
-    public Workspace(String name, String description, Date updatedAt, Date createdAt){
-        super(name, description, updatedAt, createdAt);
+    public Workspace(String name, String description){
+        super(name, description);
     }
 
     public List<Job> getJobs() {

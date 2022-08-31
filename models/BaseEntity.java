@@ -15,12 +15,12 @@ public abstract class BaseEntity {
 
     private Date createdAt;
 
-    public BaseEntity(String name, String description, Date updatedAt, Date createdAt) {
-        this.uuid = UUID.randomUUID();
-        this.name = name;
-        this.description = description;
-        this.updatedAt = updatedAt;
-        this.createdAt = createdAt;
+    public BaseEntity(String name, String description) {
+        this.setUuid(UUID.randomUUID());
+        this.setName(name);
+        this.setDescription(description);
+        this.setUpdatedAt(new Date());
+        this.setCreatedAt(new Date());
     }
 
     public UUID getUuid() {

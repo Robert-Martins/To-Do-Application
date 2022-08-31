@@ -13,11 +13,11 @@ public class Comment {
 
     private Date createdAt;
 
-    public Comment(String comment, Date updatedAt, Date createdAt){
+    public Comment(String comment){
         this.setUuid(UUID.randomUUID());
         this.setComment(comment);
-        this.setUpdatedAt(updatedAt);
-        this.setCreatedAt(createdAt);
+        this.setUpdatedAt(new Date());
+        this.setCreatedAt(new Date());
     }
 
     public UUID getUuid() {

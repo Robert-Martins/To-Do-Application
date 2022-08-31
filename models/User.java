@@ -10,6 +10,8 @@ public class User {
         this.setWorkspaces(workspaces);
     }
 
+    public User(){}
+
     public List<Workspace> getWorkspaces() {
         return workspaces;
     }
