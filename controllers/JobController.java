@@ -1,6 +1,7 @@
 package controllers;
 
 import enums.JobStatus;
+import exceptions.ResourceNotFoundException;
 import models.Comment;
 import models.Job;
 
@@ -39,7 +40,7 @@ public class JobController {
         return workspace.getJobs().stream()
                 .filter(job -> job.getUuid() == uuid)
                 .findAny()
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("Job Not Found"));
     }
 
     public List<Comment> getJobComments(UUID workspaceUuid, UUID uuid){

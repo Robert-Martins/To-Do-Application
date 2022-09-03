@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.ResourceNotFoundException;
 import models.Job;
 import models.Workspace;
 
@@ -27,7 +28,7 @@ public class WorkspaceController {
         return userController.getUser().getWorkspaces().stream()
                 .filter(workspace -> workspace.getUuid() == uuid)
                 .findAny()
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("Workspace Not Found"));
     }
 
     public List<Job> getWorkspaceJobs(UUID uuid){
@@ -37,10 +38,7 @@ public class WorkspaceController {
     public void updateWorkspace(UUID uuid, String name, String description){
         var user = userController.getUser();
         var workspaces = userController.getUser().getWorkspaces();
-        var workspace = workspaces.stream()
-                .filter(w -> w.getUuid() == uuid)
-                .findAny()
-                .orElseThrow();
+        var workspace = this.getWorkspace(uuid);
         var index = workspaces.indexOf(workspace);
         workspace.setName(name);
         workspace.setDescription(description);

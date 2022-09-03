@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.ResourceNotFoundException;
 import models.Comment;
 
 import java.util.Date;
@@ -42,7 +43,7 @@ public class CommentController {
         return job.getComments().stream()
                 .filter(comment -> comment.getUuid() == uuid)
                 .findAny()
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("Comment Not Found"));
     }
 
     public void updateComment(UUID workspaceUuid, UUID jobUuid, UUID uuid, String comment){
