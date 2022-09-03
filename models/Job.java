@@ -4,7 +4,6 @@ import enums.JobStatus;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class Job extends BaseEntity {
 

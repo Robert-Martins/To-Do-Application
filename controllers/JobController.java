@@ -23,10 +23,13 @@ public class JobController {
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
         var workspace = workspaceController.getWorkspace(workspaceUuid);
-        workspaces.remove(workspace);
+        var index = workspaces.indexOf(workspace);
         var jobs = workspace.getJobs();
         jobs.add(new Job(name, description, dueDate));
         workspace.setJobs(jobs);
+        workspaces.set(index, workspace);
+        user.setWorkspaces(workspaces);
+        userController.saveUser(user);
     }
 
     public Job getJob(UUID workspaceUuid, UUID uuid){
@@ -50,15 +53,32 @@ public class JobController {
         var workspace = workspaceController.getWorkspace(workspaceUuid);
         var jobs = workspace.getJobs();
         var job = this.getJob(workspaceUuid, uuid);
-        workspaces.remove(workspace);
-        jobs.remove(job);
+        var workspaceIndex = workspaces.indexOf(workspace);
+        var index = jobs.indexOf(job);
         job.setName(name);
         job.setDescription(description);
         job.setDueDate(dueDate);
         job.setUpdatedAt(new Date());
-        jobs.add(job);
+        jobs.set(index, job);
         workspace.setJobs(jobs);
-        workspaces.add(workspace);
+        workspaces.set(workspaceIndex, workspace);
+        user.setWorkspaces(workspaces);
+        userController.saveUser(user);
+    }
+
+    public void jobToToDo(UUID workspaceUuid, UUID uuid){
+        var user = userController.getUser();
+        var workspaces = user.getWorkspaces();
+        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var jobs = workspace.getJobs();
+        var job = this.getJob(workspaceUuid, uuid);
+        var workspaceIndex = workspaces.indexOf(workspace);
+        var index = jobs.indexOf(job);
+        job.setStatus(JobStatus.TO_DO);
+        job.setUpdatedAt(new Date());
+        jobs.set(index, job);
+        workspace.setJobs(jobs);
+        workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }
@@ -69,13 +89,13 @@ public class JobController {
         var workspace = workspaceController.getWorkspace(workspaceUuid);
         var jobs = workspace.getJobs();
         var job = this.getJob(workspaceUuid, uuid);
-        workspaces.remove(workspace);
-        jobs.remove(job);
+        var workspaceIndex = workspaces.indexOf(workspace);
+        var index = jobs.indexOf(job);
         job.setStatus(JobStatus.DEVELOPMENT);
         job.setUpdatedAt(new Date());
-        jobs.add(job);
+        jobs.set(index, job);
         workspace.setJobs(jobs);
-        workspaces.add(workspace);
+        workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }
@@ -86,13 +106,13 @@ public class JobController {
         var workspace = workspaceController.getWorkspace(workspaceUuid);
         var jobs = workspace.getJobs();
         var job = this.getJob(workspaceUuid, uuid);
-        workspaces.remove(workspace);
-        jobs.remove(job);
+        var workspaceIndex = workspaces.indexOf(workspace);
+        var index = jobs.indexOf(job);
         job.setStatus(JobStatus.STAND_BY);
         job.setUpdatedAt(new Date());
-        jobs.add(job);
+        jobs.set(index, job);
         workspace.setJobs(jobs);
-        workspaces.add(workspace);
+        workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }
@@ -103,14 +123,14 @@ public class JobController {
         var workspace = workspaceController.getWorkspace(workspaceUuid);
         var jobs = workspace.getJobs();
         var job = this.getJob(workspaceUuid, uuid);
-        workspaces.remove(workspace);
-        jobs.remove(job);
+        var workspaceIndex = workspaces.indexOf(workspace);
+        var index = jobs.indexOf(job);
         job.setStatus(JobStatus.DONE);
         job.setDateDone(new Date());
         job.setUpdatedAt(new Date());
-        jobs.add(job);
+        jobs.set(index, job);
         workspace.setJobs(jobs);
-        workspaces.add(workspace);
+        workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }
@@ -119,11 +139,11 @@ public class JobController {
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
         var workspace = workspaceController.getWorkspace(workspaceUuid);
-        workspaces.remove(workspace);
+        var index = workspaces.indexOf(workspace);
         var jobs = workspace.getJobs();
         jobs.remove(this.getJob(workspaceUuid, uuid));
         workspace.setJobs(jobs);
-        workspaces.add(workspace);
+        workspaces.set(index, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }

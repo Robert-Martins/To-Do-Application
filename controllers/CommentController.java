@@ -26,13 +26,13 @@ public class CommentController {
         var jobs = workspace.getJobs();
         var job = jobController.getJob(workspaceUuid, jobUuid);
         var comments = job.getComments();
-        workspaces.remove(workspace);
-        jobs.remove(job);
+        var workspaceIndex = workspaces.indexOf(workspace);
+        var jobIndex = jobs.indexOf(job);
         comments.add(new Comment(comment));
         job.setComments(comments);
-        jobs.add(job);
+        jobs.set(jobIndex, job);
         workspace.setJobs(jobs);
-        workspaces.add(workspace);
+        workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }
@@ -53,16 +53,16 @@ public class CommentController {
         var job = jobController.getJob(workspaceUuid, jobUuid);
         var comments = job.getComments();
         var comm = this.getComment(workspaceUuid, jobUuid, uuid);
-        workspaces.remove(workspace);
-        jobs.remove(job);
-        comments.remove(comm);
+        var workspaceIndex = workspaces.indexOf(workspace);
+        var jobIndex = jobs.indexOf(job);
+        var index = comments.indexOf(comment);
         comm.setComment(comment);
         comm.setUpdatedAt(new Date());
-        comments.add(comm);
+        comments.set(index, comm);
         job.setComments(comments);
-        jobs.add(job);
+        jobs.set(jobIndex, job);
         workspace.setJobs(jobs);
-        workspaces.add(workspace);
+        workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }
@@ -75,13 +75,13 @@ public class CommentController {
         var job = jobController.getJob(workspaceUuid, jobUuid);
         var comments = job.getComments();
         var comm = this.getComment(workspaceUuid, jobUuid, uuid);
-        workspaces.remove(workspace);
-        jobs.remove(job);
+        var workspaceIndex = workspaces.indexOf(workspace);
+        var jobIndex = jobs.indexOf(job);
         comments.remove(comm);
         job.setComments(comments);
-        jobs.add(job);
+        jobs.set(jobIndex, job);
         workspace.setJobs(jobs);
-        workspaces.add(workspace);
+        workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }

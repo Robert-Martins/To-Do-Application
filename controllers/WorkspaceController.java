@@ -41,12 +41,13 @@ public class WorkspaceController {
                 .filter(w -> w.getUuid() == uuid)
                 .findAny()
                 .orElseThrow();
-        workspaces.remove(workspace);
+        var index = workspaces.indexOf(workspace);
         workspace.setName(name);
         workspace.setDescription(description);
         workspace.setUpdatedAt(new Date());
-        workspaces.add(workspace);
+        workspaces.set(index, workspace);
         user.setWorkspaces(workspaces);
+        userController.saveUser(user);
     }
 
     public void deleteWorkspace(UUID uuid){
