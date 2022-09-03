@@ -6,9 +6,10 @@ public class UserController {
 
     public UserController(){}
 
-    public void initializeUser(String name){
-        var user = new User();
+    public User initializeUser(String name){
+        var user = new User(name);
         saveUser(user);
+        return user;
     }
 
     public User getUser(){

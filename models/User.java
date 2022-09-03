@@ -20,6 +20,12 @@ public class User {
         this.setCreatedAt(new Date());
     }
 
+    public User(String name){
+        this.setName(name);
+        this.setUpdateAt(new Date());
+        this.setCreatedAt(new Date());
+    }
+
     public User(){}
 
     public String getName() {
