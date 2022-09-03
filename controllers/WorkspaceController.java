@@ -10,11 +10,9 @@ import java.util.UUID;
 
 public class WorkspaceController {
 
-    final UserController userController;
+    private UserController userController = new UserController();
 
-    WorkspaceController(UserController userController){
-        this.userController = userController;
-    }
+    public WorkspaceController(){}
 
     public void createWorkspace(String name, String description){
         var user = userController.getUser();

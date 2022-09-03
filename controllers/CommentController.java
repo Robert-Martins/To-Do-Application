@@ -8,17 +8,13 @@ import java.util.UUID;
 
 public class CommentController {
 
-    final UserController userController;
+    private UserController userController = new UserController();
 
-    final WorkspaceController workspaceController;
+    private WorkspaceController workspaceController = new WorkspaceController();
 
-    final JobController jobController;
+    private JobController jobController = new JobController();
 
-    public CommentController(UserController userController, WorkspaceController workspaceController, JobController jobController){
-        this.userController = userController;
-        this.workspaceController = workspaceController;
-        this.jobController = jobController;
-    }
+    public CommentController(){}
 
     public void createComment(UUID workspaceUuid, UUID jobUuid, String comment){
         var user = userController.getUser();

@@ -11,14 +11,11 @@ import java.util.UUID;
 
 public class JobController {
 
-    final UserController userController;
+    private UserController userController = new UserController();
 
-    final WorkspaceController workspaceController;
+    private WorkspaceController workspaceController = new WorkspaceController();
 
-    public JobController(UserController userController, WorkspaceController workspaceController){
-        this.userController = userController;
-        this.workspaceController = workspaceController;
-    }
+    public JobController(){}
 
     public void createJob(UUID workspaceUuid, String name, String description, Date dueDate){
         var user = userController.getUser();
