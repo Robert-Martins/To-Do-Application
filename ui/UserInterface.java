@@ -4,11 +4,13 @@ import controllers.CommentController;
 import controllers.JobController;
 import controllers.UserController;
 import controllers.WorkspaceController;
+import enums.JobStatus;
+import models.Comment;
 import models.Job;
-import models.User;
 import models.Workspace;
 
 import javax.swing.*;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -103,6 +105,7 @@ public class UserInterface {
         String name = JOptionPane.showInputDialog("Digite o nome do workspace: \n");
         String description = JOptionPane.showInputDialog("Digite a descrição do workspace: \n");
         var workspace = workspaceController.createWorkspace(name, description);
+        JOptionPane.showMessageDialog(null, "Workspace cadastrado com sucesso\n\n");
         workspaceMenu(workspace.getUuid());
     }
 
@@ -115,30 +118,47 @@ public class UserInterface {
     }
 
     private void workspaceMenu(UUID uuid){
-        var user = userController.getUser();
         var workspace = workspaceController.getWorkspace(uuid);
         var option = Integer.parseInt(JOptionPane.showInputDialog(
            workspace.getName()+"\n\n"+
            "Workspaces jobs: \n"+
            workspaceMenuJobsOption(workspace.getJobs())+
            "\n"+
-           "10 - Criar novo Job"+
-           "11 - Editar workspace"+
-           "12 - Voltar para o menu principal"+
-           "13 - Encerrar programa"
+           "10 - Criar novo Job\n"+
+           "11 - Editar workspace\n"+
+           "12 - Deletar workspace\n"+
+           "13 - Workspace report\n"+
+           "14 - Voltar para o menu principal\n"+
+           "15 - Encerrar programa\n"
         ));
         if(option >= 0 && option <= 9){
-
+            try{
+                var job = workspace.getJobs().get(option);
+                jobMenu(workspace.getUuid(), job.getUuid());
+            }
+            catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Digite uma opção válida\n\n");
+                workspaceMenu(uuid);
+            }
         }
         if(option == 10)
-            jobRegisterMenu();
+            jobRegisterMenu(uuid);
         if(option == 11)
             workspaceUpdateMenu(uuid);
-        if(option == 12)
+        if(option == 12){
+            workspaceController.deleteWorkspace(uuid);
+            JOptionPane.showMessageDialog(null, "Workspace deletado com sucesso\n");
+            workspacesMenu();
+        }
+        if(option == 13){
+
+        }
+        if(option == 14)
             mainMenu();
-        if(option == 13)
+        if(option == 15)
             systemShutdown();
-        if(option > 13 || option < 0){
+        if(option > 15 || option < 0){
             JOptionPane.showMessageDialog(null, "Digite uma opção válida\n");
             workspaceMenu(uuid);
         }
@@ -155,12 +175,184 @@ public class UserInterface {
         return menuOptions;
     }
 
-    private void jobRegisterMenu(){
-
+    private void jobRegisterMenu(UUID workspaceUuid){
+        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        if(workspace.getJobs() != null && workspace.getJobs().size() > 10){
+            JOptionPane.showMessageDialog(null, "Número máximo de jobs cadastrados\n\n");
+            workspaceMenu(workspaceUuid);
+        }
+        String name = JOptionPane.showInputDialog("Digite o nome do job: \n");
+        String description = JOptionPane.showInputDialog("Digite a descrição do job: \n");
+        int dueDate = Integer.parseInt(JOptionPane.showInputDialog("Digite a quantidade de dias até a conclusão do job: \n"));
+        long sum = new Date().getTime() + dueDate;
+        Date date = new Date(sum);
+        var job = jobController.createJob(workspaceUuid, name, description, date);
+        JOptionPane.showMessageDialog(null, "Job cadastrado com sucesso\n\n");
+        jobMenu(workspaceUuid, job.getUuid());
     }
 
-    private void jobUpdateMenu(){
+    private void jobUpdateMenu(UUID workspaceUuid, UUID uuid){
+        var job = jobController.getJob(workspaceUuid, uuid);
+        if(job.getStatus() == JobStatus.DONE){
+            JOptionPane.showMessageDialog(null, "Não é possível alterar status de um Job Done");
+            jobMenu(workspaceUuid, uuid);
+        }
+        String name = JOptionPane.showInputDialog("Digite o nome do job: \n");
+        String description = JOptionPane.showInputDialog("Digite a descrição do job: \n");
+        int dueDate = Integer.parseInt(JOptionPane.showInputDialog("Digite a quantidade de dias até a conclusão do job: \n"));
+        long sum = new Date().getTime() + dueDate;
+        Date date = new Date(sum);
+        jobController.updateJob(workspaceUuid, uuid, name, description, date);
+        JOptionPane.showMessageDialog(null, "Job atualizado com sucesso\n\n");
+        jobMenu(workspaceUuid, uuid);
+    }
 
+    private void jobStatusUpdateMenu(UUID workspaceUuid, UUID uuid){
+        var job = jobController.getJob(workspaceUuid, uuid);
+        if(job.getStatus() == JobStatus.DONE){
+            JOptionPane.showMessageDialog(null, "Não é possível alterar status de um Job Done");
+            jobMenu(workspaceUuid, uuid);
+        }
+        var option = Integer.parseInt(JOptionPane.showInputDialog(
+                "Digite o id de um status: \n\n"+
+                "1 - To Do\n"+
+                "2 - Development\n"+
+                "3 - Done\n"+
+                "4 - Stand By\n"
+        ));
+        if(option == 1){
+            jobController.jobToToDo(workspaceUuid, uuid);
+            JOptionPane.showMessageDialog(null, "Job atualizado para To Do\n");
+            jobMenu(workspaceUuid, uuid);
+        }
+        if(option == 2){
+            jobController.jobToDevelopment(workspaceUuid, uuid);
+            JOptionPane.showMessageDialog(null, "Job atualizado para Development\n");
+            jobMenu(workspaceUuid, uuid);
+        }
+        if(option == 3){
+            jobController.jobToDone(workspaceUuid, uuid);
+            JOptionPane.showMessageDialog(null, "Job atualizado para Done\n");
+            jobMenu(workspaceUuid, uuid);
+        }
+        if(option == 4){
+            jobController.jobToStandby(workspaceUuid, uuid);
+            JOptionPane.showMessageDialog(null, "Job atualizado para Stand By\n");
+            jobMenu(workspaceUuid, uuid);
+        }
+        if(option < 1 || option > 4){
+            JOptionPane.showMessageDialog(null, "Digite uma opção válida\n");
+            jobMenu(workspaceUuid, uuid);
+        }
+    }
+
+    private void jobMenu(UUID workspaceUuid, UUID uuid){
+        var job = jobController.getJob(workspaceUuid, uuid);
+        var option = Integer.parseInt(JOptionPane.showInputDialog(
+           job.getName()+" - Status: "+job.getStatus()+"\n\n"+
+           "Comentários do job\n"+
+           jobMenuCommentsOptions(job.getComments()) +
+           "\n"+
+           "10 - Criar novo Comment\n"+
+           "11 - Editar job\n"+
+           "12 - Editar job status\n"+
+           "13 - Deletar job"+
+           "14 - Job report"+
+           "15 - Voltar para o menu do workspace\n"+
+           "16 - Encerrar programa\n"
+        ));
+        if(option >= 0 && option <= 9){
+            try{
+                var comment = job.getComments().get(option);
+                commentMenu(workspaceUuid, uuid, comment.getUuid());
+            }
+            catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Digite uma opção válida\n\n");
+                jobMenu(workspaceUuid, uuid);
+            }
+        }
+        if(option == 10)
+            commentRegisterMenu(workspaceUuid, uuid);
+        if(option == 11)
+            jobUpdateMenu(workspaceUuid, uuid);
+        if(option == 12)
+            jobStatusUpdateMenu(workspaceUuid, uuid);
+        if(option == 13){
+            jobController.deleteJob(workspaceUuid, uuid);
+            JOptionPane.showMessageDialog(null, "Job deletado com sucesso\n");
+            workspaceMenu(workspaceUuid);
+        }
+        if(option == 14){
+
+        }
+        if(option == 15)
+            workspaceMenu(workspaceUuid);
+        if(option == 16)
+            systemShutdown();
+        if(option > 16 || option < 0){
+            JOptionPane.showMessageDialog(null, "Digite uma opção válida\n");
+            jobMenu(workspaceUuid, uuid);
+        }
+    }
+
+    private String jobMenuCommentsOptions(List<Comment> commentList){
+        var comments = commentList;
+        Comment comment;
+        String menuOptions = "Seus workspaces:\n\n";
+        for(int count = 0; count <= comments.size(); count++){
+            comment = comments.get(count);
+            menuOptions += count+ " - "+comment.getComment()+" - Data: "+comment.getCreatedAt()+"\n";
+        }
+        return menuOptions;
+    }
+
+    private void commentRegisterMenu(UUID workspaceUuid, UUID jobUuid){
+        var job = jobController.getJob(workspaceUuid, jobUuid);
+        if(job.getComments() != null && job.getComments().size() > 10){
+            JOptionPane.showMessageDialog(null, "Número máximo de comments cadastrados\n\n");
+            jobMenu(workspaceUuid, jobUuid);
+        }
+        String comm = JOptionPane.showInputDialog("Digite o comentário: \n");
+        var comment = commentController.createComment(workspaceUuid, jobUuid, comm);
+        JOptionPane.showMessageDialog(null, "Comment cadastrado com sucesso\n\n");
+        commentMenu(workspaceUuid, jobUuid, comment.getUuid());
+    }
+
+    private void commentUpdateMenu(UUID workspaceUuid, UUID jobUuid, UUID uuid){
+        String comm = JOptionPane.showInputDialog("Digite o comentário: \n");
+        var comment = commentController.updateComment(workspaceUuid, jobUuid, uuid, comm);
+        JOptionPane.showMessageDialog(null, "Comment atualizado com sucesso\n\n");
+        commentMenu(workspaceUuid, jobUuid, uuid);
+    }
+
+    private void commentMenu(UUID workspaceUuid, UUID jobUuid, UUID uuid){
+        var comment = commentController.getComment(workspaceUuid, jobUuid, uuid);
+        var option = Integer.parseInt(JOptionPane.showInputDialog(
+                "Comentário: \n\n"+
+                comment.getComment()+"\n"+
+                "Realizado em: "+comment.getCreatedAt()+"\n"+
+                "Atualizado em: "+comment.getUpdatedAt()+"\n\n"+
+                "1 - Atualizar comment\n"+
+                "2 - Deletar comment\n"+
+                "3 - Voltar para o menu do job\n"+
+                "4 - Encerrar programa\n"
+        ));
+        if(option == 1)
+            commentUpdateMenu(workspaceUuid, jobUuid, uuid);
+        if(option == 2){
+            commentController.deleteComment(workspaceUuid, jobUuid, uuid);
+            JOptionPane.showMessageDialog(null, "Comment deletado com sucesso\n");
+            jobMenu(workspaceUuid, jobUuid);
+        }
+        if(option == 3)
+            jobMenu(workspaceUuid, jobUuid);
+        if(option == 4)
+            systemShutdown();
+        if(option < 1 || option > 4){
+            JOptionPane.showMessageDialog(null, "Digite uma opção válida\n");
+            commentMenu(workspaceUuid, jobUuid, uuid);
+        }
     }
 
     private void systemShutdown(){
