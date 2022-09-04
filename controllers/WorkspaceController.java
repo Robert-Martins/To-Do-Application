@@ -14,12 +14,14 @@ public class WorkspaceController {
 
     public WorkspaceController(){}
 
-    public void createWorkspace(String name, String description){
+    public Workspace createWorkspace(String name, String description){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        workspaces.add(new Workspace(name, description));
+        var workspace = new Workspace(name, description);
+        workspaces.add(workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
+        return workspace;
     }
 
     public Workspace getWorkspace(UUID uuid){
@@ -33,7 +35,7 @@ public class WorkspaceController {
         return this.getWorkspace(uuid).getJobs();
     }
 
-    public void updateWorkspace(UUID uuid, String name, String description){
+    public Workspace updateWorkspace(UUID uuid, String name, String description){
         var user = userController.getUser();
         var workspaces = userController.getUser().getWorkspaces();
         var workspace = this.getWorkspace(uuid);
@@ -44,6 +46,7 @@ public class WorkspaceController {
         workspaces.set(index, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
+        return workspace;
     }
 
     public void deleteWorkspace(UUID uuid){

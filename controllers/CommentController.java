@@ -16,7 +16,7 @@ public class CommentController {
 
     public CommentController(){}
 
-    public void createComment(UUID workspaceUuid, UUID jobUuid, String comment){
+    public Comment createComment(UUID workspaceUuid, UUID jobUuid, String comment){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
         var workspace = workspaceController.getWorkspace(workspaceUuid);
@@ -25,13 +25,15 @@ public class CommentController {
         var comments = job.getComments();
         var workspaceIndex = workspaces.indexOf(workspace);
         var jobIndex = jobs.indexOf(job);
-        comments.add(new Comment(comment));
+        var comm = new Comment(comment);
+        comments.add(comm);
         job.setComments(comments);
         jobs.set(jobIndex, job);
         workspace.setJobs(jobs);
         workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
+        return comm;
     }
 
     public Comment getComment(UUID workspaceUuid, UUID jobUuid, UUID uuid){
@@ -42,7 +44,7 @@ public class CommentController {
                 .orElseThrow(() -> new ResourceNotFoundException("Comment Not Found"));
     }
 
-    public void updateComment(UUID workspaceUuid, UUID jobUuid, UUID uuid, String comment){
+    public Comment updateComment(UUID workspaceUuid, UUID jobUuid, UUID uuid, String comment){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
         var workspace = workspaceController.getWorkspace(workspaceUuid);
@@ -62,6 +64,7 @@ public class CommentController {
         workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
+        return comm;
     }
 
     public void deleteComment(UUID workspaceUuid, UUID jobUuid, UUID uuid){
