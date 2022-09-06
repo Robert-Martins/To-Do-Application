@@ -329,7 +329,6 @@ public class UserInterface {
         String comm = JOptionPane.showInputDialog("Digite o comentário: \n");
         var comment = commentController.createComment(workspaceIndex, index, comm);
         JOptionPane.showMessageDialog(null, "Comment cadastrado com sucesso\n\n");
-        job = jobController.getJob(workspaceIndex, index);
         jobMenu(workspaceIndex, index);
     }
 

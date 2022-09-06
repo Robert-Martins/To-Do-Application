@@ -3,7 +3,6 @@ package models;
 import enums.JobStatus;
 
 import java.util.Date;
-import java.util.List;
 
 public class Report implements IReport{
 
@@ -50,11 +49,11 @@ public class Report implements IReport{
                 "====="+workspace.getName()+"=====\n"
                         +"----------\n"
                         +" - To Do Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Development Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Done Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Stand-By Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Expired Date Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Total Jobs: "+this.getToDoJobs()+"\n"
+                        +" - Development Jobs: "+this.getDevelopmentJobs()+"\n"
+                        +" - Done Jobs: "+this.getDoneJobs()+"\n"
+                        +" - Stand-By Jobs: "+this.getStandByJobs()+"\n"
+                        +" - Expired Date Jobs: "+this.getExpiredDateJobs()+"\n"
+                        +" - Total Jobs: "+this.getCreatedJobs()+"\n"
         );
     }
 
@@ -75,14 +74,14 @@ public class Report implements IReport{
                     this.setCreatedJobs(this.getCreatedJobs()+1);
                 });
         return (
-                        "====="+workspace.getName()+"=====\n"
+                "====="+workspace.getName()+"=====\n"
                         +"----------\n"
                         +" - To Do Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Development Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Done Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Stand-By Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Expired Date Jobs: "+this.getToDoJobs()+"\n"
-                        +" - Total Jobs: "+this.getToDoJobs()+"\n"
+                        +" - Development Jobs: "+this.getDevelopmentJobs()+"\n"
+                        +" - Done Jobs: "+this.getDoneJobs()+"\n"
+                        +" - Stand-By Jobs: "+this.getStandByJobs()+"\n"
+                        +" - Expired Date Jobs: "+this.getExpiredDateJobs()+"\n"
+                        +" - Total Jobs: "+this.getCreatedJobs()+"\n"
         );
     }
 

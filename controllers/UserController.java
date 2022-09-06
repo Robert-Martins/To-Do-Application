@@ -52,8 +52,6 @@ public class UserController {
             e.printStackTrace();
         }
 
-
-
     }
 
     public void emptySavedData(){
