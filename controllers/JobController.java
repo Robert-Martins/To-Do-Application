@@ -1,6 +1,7 @@
 package controllers;
 
 import enums.JobStatus;
+import exceptions.ResourceNotFoundException;
 import models.Comment;
 import models.Job;
 
@@ -34,6 +35,8 @@ public class JobController {
 
     public Job getJob(int workspaceIndex, int index){
         var workspace = workspaceController.getWorkspace(workspaceIndex);
+        if(workspace.getJobs().size() >= index)
+            throw new ResourceNotFoundException("Job não encontrado");
         return workspace.getJobs().get(index);
     }
 
@@ -45,8 +48,12 @@ public class JobController {
     public Job updateJob(int workspaceId, int id, String name, String description, Date dueDate){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
+        if(workspaces.size() >= workspaceId)
+            throw new ResourceNotFoundException("Workspace não encontrado");
         var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
+        if(jobs.size() >= id)
+            throw new ResourceNotFoundException("Job não encontrado");
         var job = this.getJob(workspaceId, id);
         job.setName(name);
         job.setDescription(description);
@@ -63,8 +70,12 @@ public class JobController {
     public Job jobToToDo(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
+        if(workspaces.size() >= workspaceId)
+            throw new ResourceNotFoundException("Workspace não encontrado");
         var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
+        if(jobs.size() >= id)
+            throw new ResourceNotFoundException("Job não encontrado");
         var job = this.getJob(workspaceId, id);
         job.setStatus(JobStatus.TO_DO);
         job.setUpdatedAt(new Date());
@@ -79,8 +90,12 @@ public class JobController {
     public Job jobToDevelopment(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
+        if(workspaces.size() >= workspaceId)
+            throw new ResourceNotFoundException("Workspace não encontrado");
         var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
+        if(jobs.size() >= id)
+            throw new ResourceNotFoundException("Job não encontrado");
         var job = this.getJob(workspaceId, id);
         job.setStatus(JobStatus.DEVELOPMENT);
         job.setUpdatedAt(new Date());
@@ -95,8 +110,12 @@ public class JobController {
     public Job jobToStandby(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
+        if(workspaces.size() >= workspaceId)
+            throw new ResourceNotFoundException("Workspace não encontrado");
         var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
+        if(jobs.size() >= id)
+            throw new ResourceNotFoundException("Job não encontrado");
         var job = this.getJob(workspaceId, id);
         job.setStatus(JobStatus.STAND_BY);
         job.setUpdatedAt(new Date());
@@ -111,8 +130,12 @@ public class JobController {
     public Job jobToDone(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
+        if(workspaces.size() >= workspaceId)
+            throw new ResourceNotFoundException("Workspace não encontrado");
         var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
+        if(jobs.size() >= id)
+            throw new ResourceNotFoundException("Job não encontrado");
         var job = this.getJob(workspaceId, id);
         job.setStatus(JobStatus.DONE);
         job.setDateDone(new Date());
@@ -128,8 +151,12 @@ public class JobController {
     public void deleteJob(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
+        if(workspaces.size() >= workspaceId)
+            throw new ResourceNotFoundException("Workspace não encontrado");
         var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
+        if(jobs.size() >= id)
+            throw new ResourceNotFoundException("Job não encontrado");
         jobs.remove(id);
         workspace.setJobs(jobs);
         workspaces.set(workspaceId, workspace);

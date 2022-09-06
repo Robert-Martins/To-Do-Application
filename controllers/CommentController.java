@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.ResourceNotFoundException;
 import models.Comment;
 
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class CommentController {
 
     public Comment getComment(int workspaceId, int jobId, int commentId){
         var job = jobController.getJob(workspaceId, jobId);
+        if(job.getComments().size() >= commentId)
+            throw new ResourceNotFoundException("Comment não encontrado");
         return job.getComments().get(commentId);
     }
 

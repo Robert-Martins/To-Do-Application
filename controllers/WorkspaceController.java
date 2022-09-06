@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.ResourceNotFoundException;
 import models.Job;
 import models.Workspace;
 
@@ -26,7 +27,10 @@ public class WorkspaceController {
     }
 
     public Workspace getWorkspace(int index){
-        return userController.getUser().getWorkspaces().get(index);
+        var workspaces = userController.getUser().getWorkspaces();
+        if(workspaces.size() >= index)
+            throw new ResourceNotFoundException("Workspace não encontrado");
+        return workspaces.get(index);
     }
 
     public List<Job> getWorkspaceJobs(int index){
@@ -36,6 +40,8 @@ public class WorkspaceController {
     public Workspace updateWorkspace(int id, String name, String description){
         var user = userController.getUser();
         var workspaces = userController.getUser().getWorkspaces();
+        if(workspaces.size() >= id)
+            throw new ResourceNotFoundException("Workspace não encontrado");
         var workspace = this.getWorkspace(id);
         workspace.setName(name);
         workspace.setDescription(description);
@@ -49,6 +55,8 @@ public class WorkspaceController {
     public void deleteWorkspace(int index){
         var user = userController.getUser();
         var workspaces = userController.getUser().getWorkspaces();
+        if(workspaces.size() >= index)
+            throw new ResourceNotFoundException("Workspace não encontrado");
         workspaces.remove(index);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
