@@ -2,10 +2,11 @@ package models;
 
 import enums.JobStatus;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Job extends BaseEntity {
+public class Job extends BaseEntity implements Serializable {
 
     private JobStatus status;
 

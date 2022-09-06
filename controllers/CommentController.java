@@ -3,6 +3,7 @@ package controllers;
 import exceptions.ResourceNotFoundException;
 import models.Comment;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,72 +17,63 @@ public class CommentController {
 
     public CommentController(){}
 
-    public Comment createComment(UUID workspaceUuid, UUID jobUuid, String comment){
+    public Comment createComment(int workspaceId, int jobId, String comment){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        var job = jobController.getJob(workspaceUuid, jobUuid);
+        var job = jobController.getJob(workspaceId, jobId);
         var comments = job.getComments();
-        var workspaceIndex = workspaces.indexOf(workspace);
-        var jobIndex = jobs.indexOf(job);
         var comm = new Comment(comment);
+        if(comments == null)
+            comments = new ArrayList<>();
         comments.add(comm);
         job.setComments(comments);
-        jobs.set(jobIndex, job);
+        jobs.set(jobId, job);
         workspace.setJobs(jobs);
-        workspaces.set(workspaceIndex, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
         return comm;
     }
 
-    public Comment getComment(UUID workspaceUuid, UUID jobUuid, UUID uuid){
-        var job = jobController.getJob(workspaceUuid, jobUuid);
-        return job.getComments().stream()
-                .filter(comment -> comment.getUuid() == uuid)
-                .findAny()
-                .orElseThrow(() -> new ResourceNotFoundException("Comment Not Found"));
+    public Comment getComment(int workspaceId, int jobId, int commentId){
+        var job = jobController.getJob(workspaceId, jobId);
+        return job.getComments().get(commentId);
     }
 
-    public Comment updateComment(UUID workspaceUuid, UUID jobUuid, UUID uuid, String comment){
+    public Comment updateComment(int workspaceId, int jobId, int commentId, String comment){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        var job = jobController.getJob(workspaceUuid, jobUuid);
+        var job = jobController.getJob(workspaceId, jobId);
         var comments = job.getComments();
-        var comm = this.getComment(workspaceUuid, jobUuid, uuid);
-        var workspaceIndex = workspaces.indexOf(workspace);
-        var jobIndex = jobs.indexOf(job);
-        var index = comments.indexOf(comment);
+        var comm = this.getComment(workspaceId, jobId, commentId);
         comm.setComment(comment);
         comm.setUpdatedAt(new Date());
-        comments.set(index, comm);
+        comments.set(commentId, comm);
         job.setComments(comments);
-        jobs.set(jobIndex, job);
+        jobs.set(jobId, job);
         workspace.setJobs(jobs);
-        workspaces.set(workspaceIndex, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
         return comm;
     }
 
-    public void deleteComment(UUID workspaceUuid, UUID jobUuid, UUID uuid){
+    public void deleteComment(int workspaceId, int jobId, int commentId){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        var job = jobController.getJob(workspaceUuid, jobUuid);
+        var job = jobController.getJob(workspaceId, jobId);
         var comments = job.getComments();
-        var comm = this.getComment(workspaceUuid, jobUuid, uuid);
-        var workspaceIndex = workspaces.indexOf(workspace);
-        var jobIndex = jobs.indexOf(job);
-        comments.remove(comm);
+        comments.remove(commentId);
         job.setComments(comments);
-        jobs.set(jobIndex, job);
+        jobs.set(jobId, job);
         workspace.setJobs(jobs);
-        workspaces.set(workspaceIndex, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }

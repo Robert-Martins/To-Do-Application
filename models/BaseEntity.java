@@ -1,9 +1,10 @@
 package models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
 
     private UUID uuid;
 

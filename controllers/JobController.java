@@ -5,6 +5,7 @@ import exceptions.ResourceNotFoundException;
 import models.Comment;
 import models.Job;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -17,138 +18,123 @@ public class JobController {
 
     public JobController(){}
 
-    public Job createJob(UUID workspaceUuid, String name, String description, Date dueDate){
+    public Job createJob(int workspaceIndex, String name, String description, Date dueDate){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
-        var index = workspaces.indexOf(workspace);
+        var workspace = workspaceController.getWorkspace(workspaceIndex);
         var jobs = workspace.getJobs();
         var job = new Job(name, description, dueDate);
+        if(jobs == null)
+            jobs = new ArrayList<>();
         jobs.add(job);
         workspace.setJobs(jobs);
-        workspaces.set(index, workspace);
+        workspaces.set(workspaceIndex, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
         return job;
     }
 
-    public Job getJob(UUID workspaceUuid, UUID uuid){
-        var user = userController.getUser();
-        var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
-        return workspace.getJobs().stream()
-                .filter(job -> job.getUuid() == uuid)
-                .findAny()
-                .orElseThrow(() -> new ResourceNotFoundException("Job Not Found"));
+    public Job getJob(int workspaceIndex, int index){
+        var workspace = workspaceController.getWorkspace(workspaceIndex);
+        return workspace.getJobs().get(index);
     }
 
-    public List<Comment> getJobComments(UUID workspaceUuid, UUID uuid){
-        var job = this.getJob(workspaceUuid, uuid);
+    public List<Comment> getJobComments(int workspaceIndex, int index){
+        var job = this.getJob(workspaceIndex, index);
         return job.getComments();
     }
 
-    public Job updateJob(UUID workspaceUuid, UUID uuid, String name, String description, Date dueDate){
+    public Job updateJob(int workspaceId, int id, String name, String description, Date dueDate){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        var job = this.getJob(workspaceUuid, uuid);
-        var workspaceIndex = workspaces.indexOf(workspace);
-        var index = jobs.indexOf(job);
+        var job = this.getJob(workspaceId, id);
         job.setName(name);
         job.setDescription(description);
         job.setDueDate(dueDate);
         job.setUpdatedAt(new Date());
-        jobs.set(index, job);
+        jobs.set(id, job);
         workspace.setJobs(jobs);
-        workspaces.set(workspaceIndex, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
         return job;
     }
 
-    public Job jobToToDo(UUID workspaceUuid, UUID uuid){
+    public Job jobToToDo(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        var job = this.getJob(workspaceUuid, uuid);
-        var workspaceIndex = workspaces.indexOf(workspace);
-        var index = jobs.indexOf(job);
+        var job = this.getJob(workspaceId, id);
         job.setStatus(JobStatus.TO_DO);
         job.setUpdatedAt(new Date());
-        jobs.set(index, job);
+        jobs.set(id, job);
         workspace.setJobs(jobs);
-        workspaces.set(workspaceIndex, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
         return job;
     }
 
-    public Job jobToDevelopment(UUID workspaceUuid, UUID uuid){
+    public Job jobToDevelopment(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        var job = this.getJob(workspaceUuid, uuid);
-        var workspaceIndex = workspaces.indexOf(workspace);
-        var index = jobs.indexOf(job);
+        var job = this.getJob(workspaceId, id);
         job.setStatus(JobStatus.DEVELOPMENT);
         job.setUpdatedAt(new Date());
-        jobs.set(index, job);
+        jobs.set(id, job);
         workspace.setJobs(jobs);
-        workspaces.set(workspaceIndex, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
         return job;
     }
 
-    public Job jobToStandby(UUID workspaceUuid, UUID uuid){
+    public Job jobToStandby(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        var job = this.getJob(workspaceUuid, uuid);
-        var workspaceIndex = workspaces.indexOf(workspace);
-        var index = jobs.indexOf(job);
+        var job = this.getJob(workspaceId, id);
         job.setStatus(JobStatus.STAND_BY);
         job.setUpdatedAt(new Date());
-        jobs.set(index, job);
+        jobs.set(id, job);
         workspace.setJobs(jobs);
-        workspaces.set(workspaceIndex, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
         return job;
     }
 
-    public Job jobToDone(UUID workspaceUuid, UUID uuid){
+    public Job jobToDone(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        var job = this.getJob(workspaceUuid, uuid);
-        var workspaceIndex = workspaces.indexOf(workspace);
-        var index = jobs.indexOf(job);
+        var job = this.getJob(workspaceId, id);
         job.setStatus(JobStatus.DONE);
         job.setDateDone(new Date());
         job.setUpdatedAt(new Date());
-        jobs.set(index, job);
+        jobs.set(id, job);
         workspace.setJobs(jobs);
-        workspaces.set(workspaceIndex, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
         return job;
     }
 
-    public void deleteJob(UUID workspaceUuid, UUID uuid){
+    public void deleteJob(int workspaceId, int id){
         var user = userController.getUser();
         var workspaces = user.getWorkspaces();
-        var workspace = workspaceController.getWorkspace(workspaceUuid);
-        var index = workspaces.indexOf(workspace);
+        var workspace = workspaceController.getWorkspace(workspaceId);
         var jobs = workspace.getJobs();
-        jobs.remove(this.getJob(workspaceUuid, uuid));
+        jobs.remove(id);
         workspace.setJobs(jobs);
-        workspaces.set(index, workspace);
+        workspaces.set(workspaceId, workspace);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);
     }
