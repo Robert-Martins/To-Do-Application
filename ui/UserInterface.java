@@ -6,9 +6,7 @@ import controllers.UserController;
 import controllers.WorkspaceController;
 import enums.JobStatus;
 import exceptions.ResourceNotFoundException;
-import models.Comment;
-import models.Job;
-import models.Workspace;
+import models.*;
 
 import javax.swing.*;
 import java.util.Date;
@@ -24,6 +22,8 @@ public class UserInterface {
     private final JobController jobController = new JobController();
 
     private final CommentController commentController = new CommentController();
+
+    private final Report report = new Report();
 
     public UserInterface(){}
 
@@ -154,7 +154,8 @@ public class UserInterface {
                 mainMenu();
             }
             if(option == 13){
-
+                JOptionPane.showMessageDialog(null, report.workspaceReport(workspace));
+                workspaceMenu(index);
             }
             if(option == 14)
                 mainMenu();
@@ -293,7 +294,8 @@ public class UserInterface {
             workspaceMenu(workspaceIndex);
         }
         if(option == 14){
-
+            JOptionPane.showMessageDialog(null, report.jobReport(job));
+            jobMenu(workspaceIndex, index);
         }
         if(option == 15)
             workspaceMenu(workspaceIndex);

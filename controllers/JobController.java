@@ -1,20 +1,18 @@
 package controllers;
 
 import enums.JobStatus;
-import exceptions.ResourceNotFoundException;
 import models.Comment;
 import models.Job;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class JobController {
 
-    private UserController userController = new UserController();
+    private final UserController userController = new UserController();
 
-    private WorkspaceController workspaceController = new WorkspaceController();
+    private final WorkspaceController workspaceController = new WorkspaceController();
 
     public JobController(){}
 

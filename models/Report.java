@@ -21,17 +21,10 @@ public class Report implements IReport{
 
     private int createdJobs;
 
-    @Override
-    public void userReport(List<Workspace> workspaces){
-        clearAttributes();
-        workspaces.forEach(workspace -> {
-                    this.setWorkspacesNumber(this.getWorkspacesNumber()+1);
-                    workspaceReport(workspace);
-                });
-    }
+    public Report(){}
 
     @Override
-    public void workspaceReport(Workspace workspace, Date initialDate, Date finalDate){
+    public String workspaceReport(Workspace workspace, Date initialDate, Date finalDate){
         clearAttributes();
         workspace.getJobs().stream()
                 .filter(job ->
@@ -53,7 +46,7 @@ public class Report implements IReport{
                         this.setExpiredDateJobs(this.getExpiredDateJobs()+1);
                     this.setCreatedJobs(this.getCreatedJobs()+1);
                 });
-        System.out.println(
+        return (
                 "====="+workspace.getName()+"=====\n"
                         +"----------\n"
                         +" - To Do Jobs: "+this.getToDoJobs()+"\n"
@@ -66,7 +59,7 @@ public class Report implements IReport{
     }
 
     @Override
-    public void workspaceReport(Workspace workspace){
+    public String workspaceReport(Workspace workspace){
         clearAttributes();
         workspace.getJobs().forEach(job -> {
                     if(job.getStatus() == JobStatus.TO_DO)
@@ -81,7 +74,7 @@ public class Report implements IReport{
                         this.setExpiredDateJobs(this.getExpiredDateJobs()+1);
                     this.setCreatedJobs(this.getCreatedJobs()+1);
                 });
-        System.out.println(
+        return (
                         "====="+workspace.getName()+"=====\n"
                         +"----------\n"
                         +" - To Do Jobs: "+this.getToDoJobs()+"\n"
@@ -94,8 +87,8 @@ public class Report implements IReport{
     }
 
     @Override
-    public void jobReport(Job job){
-        var report = "====="+job.getName()+"=====\n"
+    public String jobReport(Job job){
+        String report = "====="+job.getName()+"=====\n"
                 +"- Description: "+job.getDescription()+"\n"
                 +"- Current job status: "+job.getStatus()+"\n"
                 +"- Created At: "+job.getCreatedAt()+"\n"
@@ -105,9 +98,7 @@ public class Report implements IReport{
             report += "*****JOB EXPIRED*****\n";
         if(job.getStatus() == JobStatus.DONE)
             report += "- Date of conclusion: "+job.getDateDone()+"\n";
-        System.out.println(
-
-        );
+        return report;
     }
 
     private void clearAttributes(){

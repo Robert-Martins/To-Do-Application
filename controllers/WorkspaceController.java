@@ -1,13 +1,11 @@
 package controllers;
 
-import exceptions.ResourceNotFoundException;
 import models.Job;
 import models.Workspace;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class WorkspaceController {
 
@@ -51,7 +49,6 @@ public class WorkspaceController {
     public void deleteWorkspace(int index){
         var user = userController.getUser();
         var workspaces = userController.getUser().getWorkspaces();
-        var workspace = getWorkspace(index);
         workspaces.remove(index);
         user.setWorkspaces(workspaces);
         userController.saveUser(user);

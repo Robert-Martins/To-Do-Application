@@ -1,11 +1,9 @@
 package controllers;
 
-import exceptions.ResourceNotFoundException;
 import models.Comment;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
 public class CommentController {
 
