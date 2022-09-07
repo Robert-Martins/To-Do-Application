@@ -28,7 +28,7 @@ public class WorkspaceController {
 
     public Workspace getWorkspace(int index){
         var workspaces = userController.getUser().getWorkspaces();
-        if(workspaces.size() >= index)
+        if(workspaces.size() <= index)
             throw new ResourceNotFoundException("Workspace não encontrado");
         return workspaces.get(index);
     }
@@ -40,7 +40,7 @@ public class WorkspaceController {
     public Workspace updateWorkspace(int id, String name, String description){
         var user = userController.getUser();
         var workspaces = userController.getUser().getWorkspaces();
-        if(workspaces.size() >= id)
+        if(workspaces.size() <= id)
             throw new ResourceNotFoundException("Workspace não encontrado");
         var workspace = this.getWorkspace(id);
         workspace.setName(name);
@@ -55,7 +55,7 @@ public class WorkspaceController {
     public void deleteWorkspace(int index){
         var user = userController.getUser();
         var workspaces = userController.getUser().getWorkspaces();
-        if(workspaces.size() >= index)
+        if(workspaces.size() <= index)
             throw new ResourceNotFoundException("Workspace não encontrado");
         workspaces.remove(index);
         user.setWorkspaces(workspaces);
