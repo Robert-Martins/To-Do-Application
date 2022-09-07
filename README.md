@@ -2,6 +2,14 @@
     Projeto Final da Disciplina de POO
 </p>
 
+<p style="font-style: italic">
+    Alunos:<br>
+    Bruno Alves dos Reis
+    Robert Cardoso Cantares Martins
+</p>
+
+
+
 # Sistema de To-Do
 
 O sistema foi desenvolvido utilizando Java em sua versão 17.
@@ -15,7 +23,7 @@ Habilidades desenvolvidas durante implementação da aplicação:
 - Lógica de programação
 
 O usuário da aplicação possui uma classe que o define,
-apenas para resgate inicial dos dados salvos no arquivo.
+com nome, timestamp de criação e atualização e seus workspaces.
 
 O usuário final possuirá workspaces no qual poderá definir
 o escopo de cada um e os jobs a serem cadastrados.
@@ -39,6 +47,23 @@ para grande parte das classes, no intuito de evitar redundâncias
 através de herança. A classe se denomina BaseEntity,
 classe abstrata por não necessitar de instância.
 
+Cada entidade da aplicação possui um CRUD e método de listagem
+de atributos filhos desenvolvidos nos arquivos Controllers.
+
+Foi criada também uma exception para recursos não encontrados com
+base no id.
+
+Além disso, utilizando JUnit, os construtores da entidade foram
+testados. Os métodos do CRUD não foram testados por conta da 
+manipulação de dados.
+
+Todos os arquivos e alterações são salvos em um arquivo .txt.
+
 Ainda, existe uma interface que produz relatórios do usuário,
 de workspaces e jobs. A interface foi utilizada para abstrair
 a implementação.
+
+### Como rodar
+
+Para rodar a aplicação é necessário possuir o JDK 17 e rodar o
+método main() no arquivo Application.java.
