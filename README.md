@@ -4,7 +4,7 @@
 
 <p style="font-style: italic">
     Alunos:<br>
-    Bruno Alves dos Reis
+    Bruno Alves dos Reis <br>
     Robert Cardoso Cantares Martins
 </p>
 
