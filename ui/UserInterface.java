@@ -106,14 +106,18 @@ public class UserInterface {
         String description = JOptionPane.showInputDialog("Digite a descrição do workspace: \n");
         var workspace = workspaceController.createWorkspace(name, description);
         JOptionPane.showMessageDialog(null, "Workspace cadastrado com sucesso\n\n");
-        user = userController.getUser();
         workspacesMenu();
     }
 
     private void workspaceUpdateMenu(int index){
         String name = JOptionPane.showInputDialog("Digite o nome do workspace: \n");
         String description = JOptionPane.showInputDialog("Digite a descrição do workspace: \n");
-        workspaceController.updateWorkspace(index, name, description);
+        try{
+            workspaceController.updateWorkspace(index, name, description);
+        } catch (ResourceNotFoundException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Workspace não encontrado");
+        }
         JOptionPane.showMessageDialog(null, "Workspace atualizado\n\n");
         workspacesMenu();
     }
@@ -166,8 +170,9 @@ public class UserInterface {
                 workspaceMenu(index);
             }
         }
-        catch (ResourceNotFoundException e){
-            JOptionPane.showMessageDialog(null, "Recurso não encontrado");
+        catch (ResourceNotFoundException | IndexOutOfBoundsException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Workspace não encontrado");
             workspacesMenu();
         }
     }
@@ -196,9 +201,8 @@ public class UserInterface {
         int dueDate = Integer.parseInt(JOptionPane.showInputDialog("Digite a quantidade de dias até a conclusão do job: \n"));
         long sum = new Date().getTime() + dueDate;
         Date date = new Date(sum);
-        var job = jobController.createJob(workspaceIndex, name, description, date);
+        jobController.createJob(workspaceIndex, name, description, date);
         JOptionPane.showMessageDialog(null, "Job cadastrado com sucesso\n\n");
-        workspace = workspaceController.getWorkspace(workspaceIndex);
         workspaceMenu(workspaceIndex);
     }
 
@@ -258,52 +262,59 @@ public class UserInterface {
     }
 
     private void jobMenu(int workspaceIndex, int index){
-        var job = jobController.getJob(workspaceIndex, index);
-        var option = Integer.parseInt(JOptionPane.showInputDialog(
-           job.getName()+" - Status: "+job.getStatus()+"\n\n"+
-           "Comentários do job\n"+
-           jobMenuCommentsOptions(job.getComments()) +
-           "\n"+
-           "10 - Criar novo Comment\n"+
-           "11 - Editar job\n"+
-           "12 - Editar job status\n"+
-           "13 - Deletar job\n"+
-           "14 - Job report\n"+
-           "15 - Voltar para o menu do workspace\n"+
-           "16 - Encerrar programa\n"
-        ));
-        if(option >= 0 && option <= 9){
-            try{
-                commentMenu(workspaceIndex, index, option);
+        try{
+            var job = jobController.getJob(workspaceIndex, index);
+            var option = Integer.parseInt(JOptionPane.showInputDialog(
+                    job.getName()+" - Status: "+job.getStatus()+"\n\n"+
+                            "Comentários do job\n"+
+                            jobMenuCommentsOptions(job.getComments()) +
+                            "\n"+
+                            "10 - Criar novo Comment\n"+
+                            "11 - Editar job\n"+
+                            "12 - Editar job status\n"+
+                            "13 - Deletar job\n"+
+                            "14 - Job report\n"+
+                            "15 - Voltar para o menu do workspace\n"+
+                            "16 - Encerrar programa\n"
+            ));
+            if(option >= 0 && option <= 9){
+                try{
+                    commentMenu(workspaceIndex, index, option);
+                }
+                catch (IndexOutOfBoundsException e){
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Digite uma opção válida\n\n");
+                    jobMenu(workspaceIndex, index);
+                }
             }
-            catch (IndexOutOfBoundsException e){
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Digite uma opção válida\n\n");
+            if(option == 10)
+                commentRegisterMenu(workspaceIndex, index);
+            if(option == 11)
+                jobUpdateMenu(workspaceIndex, index);
+            if(option == 12)
+                jobStatusUpdateMenu(workspaceIndex, index);
+            if(option == 13){
+                jobController.deleteJob(workspaceIndex, index);
+                JOptionPane.showMessageDialog(null, "Job deletado com sucesso\n");
+                workspaceMenu(workspaceIndex);
+            }
+            if(option == 14){
+                JOptionPane.showMessageDialog(null, report.jobReport(job));
+                jobMenu(workspaceIndex, index);
+            }
+            if(option == 15)
+                workspaceMenu(workspaceIndex);
+            if(option == 16)
+                systemShutdown();
+            if(option > 16 || option < 0){
+                JOptionPane.showMessageDialog(null, "Digite uma opção válida\n");
                 jobMenu(workspaceIndex, index);
             }
         }
-        if(option == 10)
-            commentRegisterMenu(workspaceIndex, index);
-        if(option == 11)
-            jobUpdateMenu(workspaceIndex, index);
-        if(option == 12)
-            jobStatusUpdateMenu(workspaceIndex, index);
-        if(option == 13){
-            jobController.deleteJob(workspaceIndex, index);
-            JOptionPane.showMessageDialog(null, "Job deletado com sucesso\n");
+        catch (ResourceNotFoundException | IndexOutOfBoundsException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Job não encontrado");
             workspaceMenu(workspaceIndex);
-        }
-        if(option == 14){
-            JOptionPane.showMessageDialog(null, report.jobReport(job));
-            jobMenu(workspaceIndex, index);
-        }
-        if(option == 15)
-            workspaceMenu(workspaceIndex);
-        if(option == 16)
-            systemShutdown();
-        if(option > 16 || option < 0){
-            JOptionPane.showMessageDialog(null, "Digite uma opção válida\n");
-            jobMenu(workspaceIndex, index);
         }
     }
 
@@ -340,31 +351,38 @@ public class UserInterface {
     }
 
     private void commentMenu(int workspaceIndex, int jobIndex, int index){
-        var comment = commentController.getComment(workspaceIndex, jobIndex, index);
-        var option = Integer.parseInt(JOptionPane.showInputDialog(
-                "Comentário: \n\n"+
-                comment.getComment()+"\n"+
-                "Realizado em: "+comment.getCreatedAt()+"\n"+
-                "Atualizado em: "+comment.getUpdatedAt()+"\n\n"+
-                "1 - Atualizar comment\n"+
-                "2 - Deletar comment\n"+
-                "3 - Voltar para o menu do job\n"+
-                "4 - Encerrar programa\n"
-        ));
-        if(option == 1)
-            commentUpdateMenu(workspaceIndex, jobIndex, index);
-        if(option == 2){
-            commentController.deleteComment(workspaceIndex, jobIndex, index);
-            JOptionPane.showMessageDialog(null, "Comment deletado com sucesso\n");
-            jobMenu(workspaceIndex, jobIndex);
+        try{
+            var comment = commentController.getComment(workspaceIndex, jobIndex, index);
+            var option = Integer.parseInt(JOptionPane.showInputDialog(
+                    "Comentário: \n\n"+
+                            comment.getComment()+"\n"+
+                            "Realizado em: "+comment.getCreatedAt()+"\n"+
+                            "Atualizado em: "+comment.getUpdatedAt()+"\n\n"+
+                            "1 - Atualizar comment\n"+
+                            "2 - Deletar comment\n"+
+                            "3 - Voltar para o menu do job\n"+
+                            "4 - Encerrar programa\n"
+            ));
+            if(option == 1)
+                commentUpdateMenu(workspaceIndex, jobIndex, index);
+            if(option == 2){
+                commentController.deleteComment(workspaceIndex, jobIndex, index);
+                JOptionPane.showMessageDialog(null, "Comment deletado com sucesso\n");
+                jobMenu(workspaceIndex, jobIndex);
+            }
+            if(option == 3)
+                jobMenu(workspaceIndex, jobIndex);
+            if(option == 4)
+                systemShutdown();
+            if(option < 1 || option > 4){
+                JOptionPane.showMessageDialog(null, "Digite uma opção válida\n");
+                commentMenu(workspaceIndex, jobIndex, index);
+            }
         }
-        if(option == 3)
+        catch (ResourceNotFoundException | IndexOutOfBoundsException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Comment não encontrado");
             jobMenu(workspaceIndex, jobIndex);
-        if(option == 4)
-            systemShutdown();
-        if(option < 1 || option > 4){
-            JOptionPane.showMessageDialog(null, "Digite uma opção válida\n");
-            commentMenu(workspaceIndex, jobIndex, index);
         }
     }
 
